@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>অপমৃত্যু মামলার তাগিদপত্র ও চালান</h2>
+<p>Welcome, {{ user.username }}!</p>
+<a href="{% url 'insertnewpm' %}"><button class="btn btn-primary">PM Entry</button></a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{% url 'change_password' %}"><button class="btn btn-info">Change password</button></a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{% url 'logout' %}"><button class="btn btn-danger">Logout</button></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+{% if request.user.is_superuser %}
+<a href="{% url 'home' %}"><button class="btn btn-primary">Dashboard</button></a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{% url 'archive' %}"><button class="btn btn-primary">Archive</button></a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{% url 'generateReport' %}"><button class="btn btn-primary">Generate Report</button></a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{% url 'generateChalan' %}"><button class="btn btn-primary">Generate Chalan</button></a>&nbsp;&nbsp;&nbsp;&nbsp;
+{% endif %}
+
+<hr/>
+<div class="row">
+    {% if contextPM %}
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">পিএম রিপোর্টের তাগিদপত্র</h5>
+            {% for data in contextPM %}
+            <p class="card-text">
+                {{ data.pmReportDate }} - <a class="btn btn-info btn-sm" href="../viewReport/tagid/{{ data.id }}">View</a>
+            {% endfor %}
+            </p>
+        </div>
+      </div><br/>
+    </div>
+    {% endif %}
+    {% if contextChalan %}
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">পিএম রিপোর্টের তাগিদপত্র প্রেরণের চালান</h5>
+            {% for data in contextChalan %}
+            <p class="card-text">
+                {{ data.chalanReportDate }} - <a class="btn btn-info btn-sm" href="../viewReport/chalan/{{ data.id }}">View</a>
+            {% endfor %}
+            </p>
+        </div>
+      </div><br/>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

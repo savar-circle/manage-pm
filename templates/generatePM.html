@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3 class="text-center">
+    পিএম রিপোর্ট জেনারেটর:
+</h3><br/>
+<form action="" method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <input class="form-control" type="number" name="memo" required placeholder="স্মারক শুরুর নং">
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <input class="form-control" type="date" name="date" id="date" required placeholder="তারিখ">
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <input class="form-control btn btn-danger" type="submit" value="Generate Now">
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

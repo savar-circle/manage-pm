@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Dashboard</h2>
+  <p>Welcome, {{ user.username }}!</p>
+  <a href="{% url 'insertnewpm' %}"><button class="btn btn-primary">PM Entry</button></a>&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="{% url 'change_password' %}"><button class="btn btn-info">Change password</button></a>&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="{% url 'logout' %}"><button class="btn btn-danger">Logout</button></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  
+  {% if request.user.is_superuser %}
+  <a href="{% url 'home' %}"><button class="btn btn-primary">Dashboard</button></a>&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="{% url 'archive' %}"><button class="btn btn-primary">Archive</button></a>&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="{% url 'generateReport' %}"><button class="btn btn-primary">Generate Report</button></a>&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="{% url 'generateChalan' %}"><button class="btn btn-primary">Generate Chalan</button></a>
+  {% endif %}
+
+  <br/><hr/>
+  <form method="post">
+    {% csrf_token %}
+    <div class="row">
+
+      <div class="col">
+        <div class="form-group">
+          <select name="pschache" class="form-control">
+            <option></option>
+            {% for local_ps in pslist %}  
+            {% if local_ps == request.user.pschache %}
+            <option selected>{{ local_ps }}</option> 
+            {% else %}
+            <option>{{ local_ps }}</option> 
+            {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="form-group">
+          <select name="casechache" class="form-control">
+            <option></option>
+            {% for local_opt in optlist %}  
+            {% if local_opt == request.user.casechache %}
+            <option selected>{{ local_opt }}</option> 
+            {% else %}
+            <option>{{ local_opt }}</option> 
+            {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="form-group">
+          <button type="submit" class="form-control btn btn-primary">সার্চ</button>
+        </div>
+      </div>
+
+    </diV>
+  </form><hr/>
+<table class="table table-striped table-inverse table-responsive">
+    <thead>
+        <tr>
+            <th class="text-center">ক্রমিক</th>
+            <th class="text-center">থানার সূত্র</th>
+            <th class="text-center">হাসপাতালের সূত্র</th>
+            <th class="text-center">তদন্তকারী অফিসার</th>
+            <th class="text-center">কার্যক্রম</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for data in context %}
+            <tr>
+                <td class="text-center">{{ forloop.counter }}.</td>
+                <td>{{ data.referencePS }} থানার {{ data.referenceType }} নং- {{ data.referenceNo }}, তারিখ- {{ data.referenceDate }} খ্রি.
+                    {% if data.referenceSection != '' %}
+                        , ধারা- {{ data.referenceSection }}
+                    {% endif %}
+                    , ভিকটিম- {{ data.victimName }}
+                </td>
+                <td class="text-center">পিএম নং- {{ data.pmNo }}, তারিখ- {{ data.pmdate }}, {{ data.hospitalName }}, ডাক্তার- {{ data.doctorName }}</td>
+                <td class="text-center">আইও: {{ data.investofficer }}<br/>লাশ বহনকারী: {{ data.caringcong }}</td>
+                <td class="text-center">
+                  {% if request.user.is_superuser or data.referencePS == request.user.psname %}
+                    <a href="close/{{ data.id }}"><button class='btn btn-sm btn-danger'>Close</button></a>
+                    <a href="edit/{{ data.id }}"><button class='btn btn-sm btn-info'>Edit</button></a>
+                  {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+</table>
+{% endblock %}
